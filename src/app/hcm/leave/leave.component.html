@@ -1,0 +1,238 @@
+<breadcrumb></breadcrumb>
+
+<div class="row">
+  <div class="col">
+    <mat-card class="text-white bg-teal-600">
+      <mat-card-header>
+        <span mat-card-avatar class="pi pi-check" style="font-size: 1.8rem"></span>
+        <mat-card-title
+          ><b>{{ this.totalapproved }}</b></mat-card-title
+        >
+        <mat-card-subtitle class="text-white">Approved</mat-card-subtitle>
+      </mat-card-header>
+    </mat-card>
+  </div>
+  <div class="col">
+    <mat-card class="text-white bg-lime-600">
+      <mat-card-header>
+        <span mat-card-avatar class="pi pi-clock" style="font-size: 1.8rem"></span>
+        <mat-card-title
+          ><b>{{ this.totalpending }}</b></mat-card-title
+        >
+        <mat-card-subtitle class="text-white">Pending</mat-card-subtitle>
+      </mat-card-header>
+    </mat-card>
+  </div>
+  <div class="col">
+    <mat-card class="text-white bg-red-600">
+      <mat-card-header>
+        <span mat-card-avatar class="pi pi-times" style="font-size: 1.8rem"></span>
+        <mat-card-title
+          ><b>{{ this.totalreject }}</b></mat-card-title
+        >
+        <mat-card-subtitle class="text-white">Reject</mat-card-subtitle>
+      </mat-card-header>
+    </mat-card>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-12">
+    <mat-card>
+      <mat-card-content>
+        <p-toast></p-toast>
+        <p-table
+          #dt
+          [value]="masterEmployee"
+          [rows]="5"
+          [paginator]="true"
+          [(selection)]="selectedLeaves"
+          [rowHover]="true"
+          [showCurrentPageReport]="true"
+          dataKey="Id"
+          currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+          styleClass="p-datatable-gridlines p-datatable-sm"
+        >
+          <ng-template pTemplate="caption">
+            <p-toolbar styleClass="mb-4 gap-2">
+              <ng-template pTemplate="left"> </ng-template>
+
+              <ng-template pTemplate="right">
+                <p-button
+                  label="Add New"
+                  icon="pi pi-plus"
+                  size="small"
+                  severity="success"
+                  (click)="openNew()"
+                ></p-button>
+              </ng-template>
+            </p-toolbar>
+          </ng-template>
+          <ng-template pTemplate="header">
+            <tr>
+              <th class="text-center">Action</th>
+              <th pSortableColumn="state" class="text-center">
+                Status <p-sortIcon field="state"></p-sortIcon>
+              </th>
+              <th pSortableColumn="employeeName">
+                Employee Name<p-sortIcon field="employeeName"></p-sortIcon>
+              </th>
+              <th style="min-width: 15rem">Leave Detail</th>
+              <th pSortableColumn="reason" style="min-width: 15rem">
+                Reason <p-sortIcon field="reason"></p-sortIcon>
+              </th>
+              <th pSortableColumn="manager">Manager <p-sortIcon field="manager"></p-sortIcon></th>
+
+              <th class="text-center">Approval</th>
+
+              <th pSortableColumn="createdDate">
+                Created Date <p-sortIcon field="createdDate"></p-sortIcon>
+              </th>
+              <th pSortableColumn="createdBy">
+                Created By <p-sortIcon field="createdBy"></p-sortIcon>
+              </th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-leave>
+            <tr>
+              <td class="text-center">
+                <div *ngIf="leave.state === 'Pending'">
+                  <p-button
+                    tooltipPosition="top"
+                    pTooltip="Update"
+                    icon="pi pi-pencil"
+                    class="p-button-xs"
+                    severity="info"
+                    (click)="editLeave(leave)"
+                  ></p-button>
+                  <p-button
+                    pTooltip="Delete"
+                    icon="pi pi-trash"
+                    class="p-button-xs"
+                    severity="warning"
+                    (click)="deleteLeave(leave)"
+                  ></p-button>
+                </div>
+              </td>
+              <td class="text-center">
+                <p-tag [value]="leave.state" [severity]="getStatusLeave(leave.state)"></p-tag>
+              </td>
+              <td>{{ leave.employeeName }}</td>
+              <td>
+                <b>Start Date : </b> {{ leave.startDate | date: 'dd MMMM yyyy' }} <br />
+                <b>End Date : </b> {{ leave.endDate | date: 'dd MMMM yyyy' }} <br />
+                <b>Leave Type : </b> {{ leave.leaveType }} <br />
+                <b>Duration : </b> {{ leave.duration }} <br />
+                <b>Days : </b> {{ leave.days }} <br />
+                <b>Balance : </b> {{ leave.balance }} <br />
+              </td>
+              <td>{{ leave.reason }}</td>
+              <td>{{ leave.manager }}</td>
+
+              <td class="text-center">
+                <i
+                  pTooltip="Detail Approval"
+                  class="pi pi-user"
+                  style="font-size: 2.5rem"
+                  style="color: black"
+                ></i>
+              </td>
+              <td>{{ leave.createdDate | date: 'dd MMMM yyyy' }}</td>
+              <td>{{ leave.createdBy }}</td>
+            </tr>
+          </ng-template>
+        </p-table>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>
+
+<p-dialog
+  [(visible)]="leaveDialog"
+  [style]="{ width: '600px' }"
+  header="Leave Details"
+  [modal]="true"
+  styleClass="p-fluid"
+>
+  <ng-template pTemplate="content">
+    <form [formGroup]="form" class="p-formgroup-horizontal">
+      <div class="field" hidden>
+        <label for="leaveId">leavesId</label>
+        <input type="text" formControlName="leaveId" class="p-inputtext" />
+      </div>
+      <div class="field">
+        <label for="employeeName">Name</label>
+        <ng-select
+          [items]="masterEmployee"
+          [multiple]="false"
+          [searchable]="false"
+          formControlName="employeeName"
+          bindLabel="employeeName"
+          bindValue="employeeName"
+          value="this.form.employeeName"
+        ></ng-select>
+      </div>
+      <div class="field">
+        <label for="startDate">Start Date</label>
+        <p-calendar dateFormat="dd MM yy" formControlName="startDate"></p-calendar>
+      </div>
+      <div class="field">
+        <label for="endDate">End Date</label>
+        <p-calendar dateFormat="dd MM yy" formControlName="endDate"></p-calendar>
+      </div>
+      <div class="field">
+        <label for="leaveType">Leave Type</label>
+        <ng-select
+          [items]="masterLeave"
+          [multiple]="false"
+          [searchable]="false"
+          formControlName="leaveType"
+          value="this.form.leaveType"
+        ></ng-select>
+      </div>
+      <div class="field">
+        <label for="reason">Reason</label>
+        <textarea
+          id="reason"
+          type="text"
+          name="reason"
+          class="p-inputtext"
+          formControlName="reason"
+        ></textarea>
+      </div>
+      <div class="field">
+        <label for="manager">Manager</label>
+        <ng-select
+          [items]="masterManagers"
+          [multiple]="false"
+          [searchable]="false"
+          formControlName="manager"
+          value="this.form.manager"
+        ></ng-select>
+      </div>
+    </form>
+  </ng-template>
+  <ng-template pTemplate="footer">
+    <p-button label="Cancel" icon="pi pi-times" (click)="hideDialog()" severity="danger"></p-button>
+    <p-button label="Save" icon="pi pi-save" (click)="saveLeave()" severity="success"></p-button>
+  </ng-template>
+</p-dialog>
+
+<p-confirmDialog #cd [style]="{ width: 'auto' }">
+  <p-footer>
+    <p-button
+      type="button"
+      icon="pi pi-times"
+      label="No"
+      (click)="cd.reject()"
+      severity="danger"
+    ></p-button>
+    <p-button
+      type="button"
+      icon="pi pi-check"
+      label="Yes"
+      (click)="cd.accept()"
+      severity="success"
+    ></p-button>
+  </p-footer>
+</p-confirmDialog>

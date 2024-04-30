@@ -1,0 +1,227 @@
+<breadcrumb></breadcrumb>
+
+<div class="row">
+  <div class="col">
+    <mat-card class="text-white bg-indigo-600">
+      <mat-card-header>
+        <span mat-card-avatar class="pi pi-user" style="font-size: 1.8rem"></span>
+        <mat-card-title
+          ><b>{{ this.totalemployee }}</b></mat-card-title
+        >
+        <mat-card-subtitle class="text-white">Total Employee</mat-card-subtitle>
+      </mat-card-header>
+    </mat-card>
+  </div>
+  <div class="col">
+    <mat-card class="text-white bg-light-blue-600">
+      <mat-card-header>
+        <span mat-card-avatar class="pi pi-users" style="font-size: 1.8rem"></span>
+        <mat-card-title
+          ><b>{{ this.totalactive }}</b></mat-card-title
+        >
+        <mat-card-subtitle class="text-white">Active Employee</mat-card-subtitle>
+      </mat-card-header>
+    </mat-card>
+  </div>
+  <div class="col">
+    <mat-card class="text-white bg-green-600">
+      <mat-card-header>
+        <span mat-card-avatar class="pi pi-wrench" style="font-size: 1.8rem"></span>
+        <mat-card-title
+          ><b>{{ this.totaldepartments }}</b></mat-card-title
+        >
+        <mat-card-subtitle class="text-white">Total Departments</mat-card-subtitle>
+      </mat-card-header>
+    </mat-card>
+  </div>
+  <div class="col">
+    <mat-card class="text-white bg-teal-600">
+      <mat-card-header>
+        <span mat-card-avatar class="pi pi-briefcase" style="font-size: 1.8rem"></span>
+        <mat-card-title
+          ><b>{{ this.totalpositions }}</b></mat-card-title
+        >
+        <mat-card-subtitle class="text-white">Total Positions</mat-card-subtitle>
+      </mat-card-header>
+    </mat-card>
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-12">
+    <mat-card>
+      <mat-card-content>
+        <p-toast></p-toast>
+
+        <p-table
+          #dt
+          [value]="employees"
+          [rows]="5"
+          [paginator]="true"
+          [(selection)]="selectedEmployees"
+          [rowHover]="true"
+          [showCurrentPageReport]="true"
+          dataKey="Id"
+          currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+          styleClass="p-datatable-gridlines p-datatable-sm"
+        >
+          <ng-template pTemplate="caption">
+            <p-toolbar styleClass="mb-4 gap-2">
+              <ng-template pTemplate="left">
+                <b>Last Update : {{ lastUpdated | date: 'dd MMMM yyyy HH:mm:ss' }}</b>
+              </ng-template>
+
+              <ng-template pTemplate="right">
+                <p-button
+                  label="Fetch Data"
+                  icon="pi pi-refresh"
+                  size="small"
+                  severity="secondary"
+                  (click)="refreshData()"
+                ></p-button>
+                &nbsp;
+              </ng-template>
+            </p-toolbar>
+          </ng-template>
+          <ng-template pTemplate="header">
+            <tr>
+              <th></th>
+              <th pSortableColumn="status" class="text-center">
+                Status Leave<p-sortIcon field="status"></p-sortIcon>
+              </th>
+              <th pSortableColumn="employeeName" style="min-width: 15rem">
+                Name <p-sortIcon field="employeeName"></p-sortIcon>
+              </th>
+              <th pSortableColumn="birth">Birth <p-sortIcon field="birth"></p-sortIcon></th>
+              <th pSortableColumn="joinDate">
+                Join Date <p-sortIcon field="joinDate"></p-sortIcon>
+              </th>
+              <th pSortableColumn="email">Email <p-sortIcon field="email"></p-sortIcon></th>
+              <th pSortableColumn="position">
+                Position <p-sortIcon field="position"></p-sortIcon>
+              </th>
+              <th pSortableColumn="department" style="min-width: 10rem">
+                Department <p-sortIcon field="department"></p-sortIcon>
+              </th>
+
+              <th pSortableColumn="isActive" class="text-center">
+                Active <p-sortIcon field="isActive"></p-sortIcon>
+              </th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-employee>
+            <tr>
+              <td class="text-center">
+                <p-button
+                  tooltipPosition="top"
+                  pTooltip="Update"
+                  icon="pi pi-pencil"
+                  class="p-button-xs"
+                  severity="info"
+                  (click)="editEmployee(employee)"
+                ></p-button>
+                <p-button
+                  pTooltip="Delete"
+                  icon="pi pi-trash"
+                  class="p-button-xs"
+                  severity="warning"
+                  (click)="deleteEmployee(employee)"
+                ></p-button>
+              </td>
+              <td class="text-center">
+                <p-tag
+                  *ngIf="employee.state !== null"
+                  [value]="employee.state"
+                  [severity]="getStatusLeave(employee.state)"
+                ></p-tag>
+              </td>
+              <td>{{ employee.employeeName }}</td>
+              <td>{{ employee.birth | date: 'dd MMMM yyyy' }}</td>
+              <td>{{ employee.joinDate | date: 'dd MMMM yyyy' }}</td>
+              <td>{{ employee.email }}</td>
+              <td>{{ employee.position }}</td>
+              <td>{{ employee.department }}</td>
+              <td class="text-center">
+                <p-tag
+                  [value]="employee.isActive == true ? 'Active' : 'Deleted'"
+                  [severity]="isActive(employee.isActive)"
+                ></p-tag>
+              </td>
+            </tr>
+          </ng-template>
+        </p-table>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>
+
+<p-dialog
+  [(visible)]="employeeDialog"
+  [style]="{ width: '600px' }"
+  header="Employee Details"
+  [modal]="true"
+  styleClass="p-fluid"
+>
+  <ng-template pTemplate="content">
+    <form [formGroup]="form" class="p-formgroup-horizontal">
+      <div class="field">
+        <label for="employeeName">Name</label>
+        <input type="text" formControlName="employeeName" class="p-inputtext" />
+      </div>
+      <div class="field">
+        <label for="birth">Birth</label>
+        <p-calendar dateFormat="dd MM yy" formControlName="birth"></p-calendar>
+      </div>
+      <div class="field">
+        <label for="joinDate">Join Date</label>
+        <p-calendar dateFormat="dd MM yy" formControlName="joinDate"></p-calendar>
+      </div>
+      <div class="field">
+        <label for="email">Email</label>
+        <input type="text" formControlName="email" class="p-inputtext" />
+      </div>
+      <div class="field">
+        <label for="position">Position</label>
+        <ng-select
+          [items]="position"
+          [multiple]="false"
+          [searchable]="false"
+          formControlName="position"
+          value="this.form.position"
+        ></ng-select>
+      </div>
+      <div class="field">
+        <label for="department">Department</label>
+        <ng-select
+          [items]="department"
+          [multiple]="false"
+          [searchable]="false"
+          formControlName="department"
+          value="this.form.department"
+        ></ng-select>
+      </div>
+    </form>
+  </ng-template>
+  <ng-template pTemplate="footer">
+    <p-button label="Cancel" icon="pi pi-times" (click)="hideDialog()" severity="danger"></p-button>
+    <p-button label="Save" icon="pi pi-save" (click)="saveEmployee()" severity="success"></p-button>
+  </ng-template>
+</p-dialog>
+
+<p-confirmDialog #cd [style]="{ width: 'auto' }">
+  <p-footer>
+    <p-button
+      type="button"
+      icon="pi pi-times"
+      label="No"
+      (click)="cd.reject()"
+      severity="danger"
+    ></p-button>
+    <p-button
+      type="button"
+      icon="pi pi-check"
+      label="Yes"
+      (click)="cd.accept()"
+      severity="success"
+    ></p-button>
+  </p-footer>
+</p-confirmDialog>

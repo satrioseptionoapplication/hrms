@@ -1,0 +1,210 @@
+<breadcrumb></breadcrumb>
+
+<div class="row">
+  <div class="col-md-12">
+    <mat-card>
+      <mat-card-content>
+        <p-toast></p-toast>
+
+        <p-table
+          #dt
+          [value]="projects"
+          [rows]="5"
+          [paginator]="true"
+          [(selection)]="selectedProjects"
+          [rowHover]="true"
+          [showCurrentPageReport]="true"
+          dataKey="Id"
+          currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+          styleClass="p-datatable-gridlines p-datatable-sm"
+        >
+          <ng-template pTemplate="caption">
+            <p-toolbar styleClass="mb-4 gap-2">
+              <ng-template pTemplate="left">
+                <b>Last Update : {{ lastUpdated | date: 'dd MMMM yyyy HH:mm:ss' }}</b>
+              </ng-template>
+
+              <ng-template pTemplate="right">
+                <p-button
+                  label="Fetch Data"
+                  icon="pi pi-refresh"
+                  size="small"
+                  severity="secondary"
+                  (click)="refreshData()"
+                ></p-button>
+                &nbsp;
+                <p-button
+                  label="Add New"
+                  icon="pi pi-plus"
+                  size="small"
+                  severity="success"
+                  (click)="openNew()"
+                ></p-button>
+              </ng-template>
+            </p-toolbar>
+          </ng-template>
+          <ng-template pTemplate="header">
+            <tr>
+              <th></th>
+              <th pSortableColumn="projectName" style="min-width: 15rem">
+                Project Name <p-sortIcon field="projectName"></p-sortIcon>
+              </th>
+              <th pSortableColumn="startDate">
+                Start Date <p-sortIcon field="startDate"></p-sortIcon>
+              </th>
+              <th pSortableColumn="endDate">End Date <p-sortIcon field="endDate"></p-sortIcon></th>
+              <th pSortableColumn="status">Status <p-sortIcon field="status"></p-sortIcon></th>
+              <th pSortableColumn="isActive" class="text-center">
+                Active <p-sortIcon field="isActive"></p-sortIcon>
+              </th>
+              <th pSortableColumn="manager">Manager <p-sortIcon field="manager"></p-sortIcon></th>
+              <th pSortableColumn="teamMembers">
+                Team Members <p-sortIcon field="teamMembers"></p-sortIcon>
+              </th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-project>
+            <tr>
+              <td class="text-center">
+                <p-button
+                  tooltipPosition="top"
+                  pTooltip="Update"
+                  icon="pi pi-pencil"
+                  class="p-button-xs"
+                  severity="info"
+                  (click)="editProject(project)"
+                ></p-button>
+                <p-button
+                  pTooltip="Delete"
+                  icon="pi pi-trash"
+                  class="p-button-xs"
+                  severity="warning"
+                  (click)="deleteProject(project)"
+                ></p-button>
+                <!-- &nbsp;
+                <i class="pi pi-eye" style="font-size: 2.5rem" style="color: black"></i> -->
+              </td>
+              <td>{{ project.projectName }}</td>
+              <td>{{ project.startDate | date: 'dd MMMM yyyy HH:mm:ss' }}</td>
+              <td>{{ project.endDate | date: 'dd MMMM yyyy HH:mm:ss' }}</td>
+              <td class="text-center">
+                <p-tag [value]="project.status" [severity]="getStatus(project.status)"></p-tag>
+              </td>
+              <td class="text-center">
+                <p-tag
+                  [value]="project.isActive == true ? 'Active' : 'Deleted'"
+                  [severity]="isActive(project.isActive)"
+                ></p-tag>
+              </td>
+              <td>{{ project.manager }}</td>
+              <td>
+                <ul>
+                  <li *ngFor="let value of project.teamMembers">{{ value }}</li>
+                </ul>
+              </td>
+            </tr>
+          </ng-template>
+        </p-table>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>
+
+<p-dialog
+  [(visible)]="projectDialog"
+  [style]="{ width: '600px' }"
+  header="Project Details"
+  [modal]="true"
+  styleClass="p-fluid"
+>
+  <ng-template pTemplate="content">
+    <form [formGroup]="form" class="p-formgroup-horizontal">
+      <div class="formgrid grid">
+        <div class="field col-12">
+          <label for="projectName">Project Name</label>
+          <input
+            type="text"
+            pInputText
+            name="projectName"
+            formControlName="projectName"
+            value="this.form.projectName"
+          />
+        </div>
+        <div class="field col-6">
+          <label for="startDate">Start Date</label>
+          <p-calendar
+            name="startDate"
+            formControlName="startDate"
+            value="this.form.startDate"
+          ></p-calendar>
+        </div>
+        <div class="field col-6">
+          <label for="endDate">End Date</label>
+          <p-calendar
+            name="endDate"
+            formControlName="endDate"
+            value="this.form.endDate"
+          ></p-calendar>
+        </div>
+        <div class="field col-12">
+          <label for="description">Description</label>
+          <textarea
+            rows="5"
+            cols="30"
+            pInputTextarea
+            name="description"
+            formControlName="description"
+            value="this.form.description"
+          ></textarea>
+        </div>
+        <div class="field col-6">
+          <label for="manager">Manager</label>
+          <p-dropdown
+            (onChange)="onDropdownChangeManager($event)"
+            formControlName="manager"
+            [options]="manager"
+            optionLabel="name"
+            [showClear]="true"
+            placeholder="Select a Manager"
+            value="this.form.manager"
+          ></p-dropdown>
+        </div>
+        <div class="field col-6">
+          <label for="teamMembers" formControlName="teamMembers">Team Members</label>
+          <ng-select
+            [items]="members"
+            [multiple]="true"
+            bindLabel="id"
+            bindValue="text"
+            [searchable]="false"
+            formControlName="teamMembers"
+            value="this.form.teamMembers"
+          ></ng-select>
+        </div>
+      </div>
+    </form>
+  </ng-template>
+  <ng-template pTemplate="footer">
+    <button type="button" pButton label="Cancel" (click)="hideDialog()"></button>
+    <button type="button" pButton label="Save" (click)="saveProject()"></button>
+  </ng-template>
+</p-dialog>
+
+<p-confirmDialog #cd [style]="{ width: 'auto' }">
+  <p-footer>
+    <p-button
+      type="button"
+      icon="pi pi-times"
+      label="No"
+      (click)="cd.reject()"
+      severity="danger"
+    ></p-button>
+    <p-button
+      type="button"
+      icon="pi pi-check"
+      label="Yes"
+      (click)="cd.accept()"
+      severity="success"
+    ></p-button>
+  </p-footer>
+</p-confirmDialog>

@@ -1,0 +1,231 @@
+<breadcrumb></breadcrumb>
+
+<div class="row">
+  <div class="col-md-12">
+    <mat-card>
+      <mat-card-content>
+        <p-toast></p-toast>
+
+        <p-table
+          #dt
+          [value]="trainingLists"
+          [rows]="10"
+          [paginator]="true"
+          [(selection)]="selectedTrainingLists"
+          [rowHover]="true"
+          [showCurrentPageReport]="true"
+          [resizableColumns]="true"
+          [scrollable]="true"
+          dataKey="trainingId"
+          currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+          styleClass="p-datatable-gridlines p-datatable-sm"
+          columnResizeMode="expand"
+        >
+          <ng-template pTemplate="caption">
+            <p-toolbar styleClass="mb-4 gap-2">
+              <ng-template pTemplate="left">
+                <b>Last Update : {{ lastUpdated | date: 'dd MMMM yyyy HH:mm:ss' }}</b>
+              </ng-template>
+
+              <ng-template pTemplate="right">
+                <p-button
+                  label="Fetch Data"
+                  icon="pi pi-refresh"
+                  size="small"
+                  severity="secondary"
+                  (click)="refreshData()"
+                ></p-button>
+                &nbsp;
+                <p-button
+                  label="Add New"
+                  icon="pi pi-plus"
+                  size="small"
+                  severity="success"
+                  (click)="openNew()"
+                ></p-button>
+              </ng-template>
+            </p-toolbar>
+          </ng-template>
+          <ng-template pTemplate="header">
+            <tr>
+              <th pFrozenColumn alignFrozen="left" [frozen]="true"></th>
+              <th pSortableColumn="trainers" style="min-width: 15rem">
+                Trainers <p-sortIcon field="trainers"></p-sortIcon>
+              </th>
+              <th pSortableColumn="trainingName" class="text-center">
+                Training name<p-sortIcon field="trainingName"></p-sortIcon>
+              </th>
+              <th pSortableColumn="trainingType" class="text-center">
+                Category<p-sortIcon field="trainingType"></p-sortIcon>
+              </th>
+              <th pSortableColumn="employee">
+                Employee <p-sortIcon field="employee"></p-sortIcon>
+              </th>
+              <th pSortableColumn="startDate" style="min-width: 10rem">
+                Start Date <p-sortIcon field="startDate"></p-sortIcon>
+              </th>
+              <th pSortableColumn="endDate" style="min-width: 10rem">
+                End Date <p-sortIcon field="endDate"></p-sortIcon>
+              </th>
+              <th pSortableColumn="description">
+                Description <p-sortIcon field="description"></p-sortIcon>
+              </th>
+              <th pSortableColumn="createdDate">
+                Created Date <p-sortIcon field="createdBy"></p-sortIcon>
+              </th>
+              <th pSortableColumn="createdBy">
+                Created By <p-sortIcon field="createdBy"></p-sortIcon>
+              </th>
+              <th pSortableColumn="isActive" class="text-center">
+                Active <p-sortIcon field="isActive"></p-sortIcon>
+              </th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-trainingList>
+            <tr>
+              <td pFrozenColumn class="text-center" alignFrozen="left" [frozen]="true">
+                <p-button
+                  tooltipPosition="top"
+                  pTooltip="Update"
+                  icon="pi pi-pencil"
+                  class="p-button-xs"
+                  severity="info"
+                  (click)="editTrainingList(trainingList)"
+                ></p-button>
+                <p-button
+                  pTooltip="Delete"
+                  icon="pi pi-trash"
+                  class="p-button-xs"
+                  severity="warning"
+                  (click)="deleteTrainingList(trainingList)"
+                ></p-button>
+              </td>
+              <td>
+                <ul>
+                  <li *ngFor="let value of trainingList.trainers">{{ value }}</li>
+                </ul>
+              </td>
+              <td>{{ trainingList.trainingName }}</td>
+              <td>{{ trainingList.trainingTypeName }}</td>
+              <td>
+                <ul>
+                  <li *ngFor="let value of trainingList.employees">{{ value }}</li>
+                </ul>
+              </td>
+              <td>{{ trainingList.startDate | date: 'dd MMMM yyyy' }}</td>
+              <td>{{ trainingList.endDate | date: 'dd MMMM yyyy' }}</td>
+              <td>{{ trainingList.description }}</td>
+              <td>{{ trainingList.createdBy }}</td>
+              <td>{{ trainingList.createdDate | date: 'dd MMMM yyyy' }}</td>
+              <td class="text-center">
+                <p-tag
+                  [value]="trainingList.isActive == true ? 'Active' : 'Deleted'"
+                  [severity]="isActive(trainingList.isActive)"
+                ></p-tag>
+              </td>
+            </tr>
+          </ng-template>
+        </p-table>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>
+
+<p-dialog
+  [(visible)]="trainingListDialog"
+  [style]="{ width: '600px' }"
+  header="Training List Details"
+  [modal]="true"
+  styleClass="p-fluid"
+>
+  <ng-template pTemplate="content">
+    <form [formGroup]="form" class="p-formgroup-horizontal">
+      <div class="field" hidden>
+        <label for="trainingId">Training ID</label>
+        <input type="text" formControlName="trainingId" class="p-inputtext" />
+      </div>
+      <div class="field">
+        <label for="trainingName">Training Name</label>
+        <textarea type="text" formControlName="trainingName" class="p-inputtext"></textarea>
+      </div>
+      <div class="field">
+        <label for="trainingTypeName">Category</label>
+        <ng-select
+          [items]="masterTrainingType"
+          [multiple]="false"
+          [searchable]="false"
+          formControlName="trainingTypeName"
+          bindLabel="trainingTypeName"
+          bindValue="trainingTypeName"
+          value="this.form.trainingTypeName"
+        ></ng-select>
+      </div>
+      <div class="field">
+        <label for="trainers">Trainers</label>
+        <ng-select
+          [items]="masterTrainers"
+          [multiple]="true"
+          [searchable]="false"
+          formControlName="trainers"
+          bindLabel="trainersName"
+          bindValue="trainersName"
+          value="this.form.trainers"
+        ></ng-select>
+      </div>
+      <div class="field">
+        <label for="employees">Employee</label>
+        <ng-select
+          [items]="masterEmployee"
+          [multiple]="true"
+          [searchable]="false"
+          formControlName="employees"
+          bindLabel="employeeName"
+          bindValue="employeeName"
+          value="this.form.employees"
+        ></ng-select>
+      </div>
+      <div class="row">
+        <div class="field col-6">
+          <label for="startDate">Start Date</label>
+          <p-calendar dateFormat="dd MM yy" formControlName="startDate"></p-calendar>
+        </div>
+        <div class="field col-6">
+          <label for="endDate">End Date</label>
+          <p-calendar dateFormat="dd MM yy" formControlName="endDate"></p-calendar>
+        </div>
+      </div>
+      <div class="field">
+        <label for="description">Description</label>
+        <textarea type="text" formControlName="description" class="p-inputtext"></textarea>
+      </div>
+    </form>
+  </ng-template>
+  <ng-template pTemplate="footer">
+    <p-button label="Cancel" icon="pi pi-trash" (click)="hideDialog()" severity="danger"></p-button>
+    <p-button
+      label="Save"
+      icon="pi pi-save"
+      (click)="saveTrainingList()"
+      severity="success"
+    ></p-button>
+  </ng-template>
+</p-dialog>
+
+<p-confirmDialog #cd [style]="{ width: 'auto' }">
+  <p-footer>
+    <p-button
+      type="button"
+      icon="pi pi-times"
+      label="No"
+      (click)="cd.reject()"
+      severity="danger"
+    ></p-button>
+    <p-button
+      type="button"
+      icon="pi pi-check"
+      label="Yes"
+      (click)="cd.accept()"
+      severity="success"
+    ></p-button>
+  </p-footer>
+</p-confirmDialog>

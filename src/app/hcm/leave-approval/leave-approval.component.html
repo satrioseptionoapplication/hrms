@@ -1,0 +1,120 @@
+<breadcrumb></breadcrumb>
+
+<div class="row">
+  <div class="col-md-12">
+    <mat-card>
+      <mat-card-content>
+        <p-toast></p-toast>
+
+        <p-table
+          #dt
+          [value]="leaveApprovals"
+          [rows]="5"
+          [paginator]="true"
+          [(selection)]="selectedLeaveApprovalEmployees"
+          [rowHover]="true"
+          [showCurrentPageReport]="true"
+          dataKey="Id"
+          currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+          styleClass="p-datatable-gridlines p-datatable-sm"
+        >
+          <ng-template pTemplate="header">
+            <tr>
+              <th class="text-center">Action</th>
+              <th pSortableColumn="status" class="text-center">
+                Status <p-sortIcon field="status"></p-sortIcon>
+              </th>
+              <th pSortableColumn="employeeName">
+                Employee Name<p-sortIcon field="employeeName"></p-sortIcon>
+              </th>
+              <th style="min-width: 15rem">LeaveApproval Detail</th>
+              <th pSortableColumn="status" style="min-width: 15rem">
+                Reason <p-sortIcon field="status"></p-sortIcon>
+              </th>
+              <th pSortableColumn="manager">Manager <p-sortIcon field="manager"></p-sortIcon></th>
+
+              <th class="text-center">Approval</th>
+
+              <th pSortableColumn="createdDate">
+                Created Date <p-sortIcon field="createdDate"></p-sortIcon>
+              </th>
+              <th pSortableColumn="createdBy">
+                Created By <p-sortIcon field="createdBy"></p-sortIcon>
+              </th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-LeaveApproval>
+            <tr>
+              <td class="text-center">
+                <div *ngIf="LeaveApproval.state === 'Pending'">
+                  <p-button
+                    icon="pi pi-check"
+                    class="p-button-xs"
+                    pTooltip="Approve"
+                    tooltipPosition="top"
+                    severity="success"
+                    (click)="saveLeaveApproval(LeaveApproval.leaveId)"
+                  ></p-button>
+                  <p-button
+                    icon="pi pi-times"
+                    class="p-button-xs"
+                    pTooltip="Reject"
+                    tooltipPosition="top"
+                    severity="danger"
+                    (click)="saveLeaveRejected(LeaveApproval.leaveId)"
+                  ></p-button>
+                </div>
+              </td>
+              <td class="text-center">
+                <p-tag
+                  [value]="LeaveApproval.state"
+                  [severity]="getStatusLeaveApproval(LeaveApproval.state)"
+                ></p-tag>
+              </td>
+              <td>{{ LeaveApproval.employeeName }}</td>
+              <td>
+                <b>Start Date : </b> {{ LeaveApproval.startDate | date: 'dd MMMM yyyy' }} <br />
+                <b>End Date : </b> {{ LeaveApproval.endDate | date: 'dd MMMM yyyy' }} <br />
+                <b>Leave Type : </b> {{ LeaveApproval.leaveType }} <br />
+                <b>Duration : </b> {{ LeaveApproval.duration }} <br />
+                <b>Balance : </b> {{ LeaveApproval.balance }} <br />
+              </td>
+              <td>{{ LeaveApproval.reason }}</td>
+              <td>{{ LeaveApproval.manager }}</td>
+
+              <td class="text-center">
+                <i
+                  pTooltip="Detail Approval"
+                  class="pi pi-user"
+                  style="font-size: 2.5rem"
+                  style="color: black"
+                ></i>
+              </td>
+              <td>{{ LeaveApproval.createdDate | date: 'dd MMMM yyyy' }}</td>
+              <td>{{ LeaveApproval.createdBy }}</td>
+            </tr>
+          </ng-template>
+        </p-table>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>
+
+<p-confirmDialog #cd [style]="{ width: 'auto' }">
+  <p-footer>
+    <p-button
+      type="button"
+      icon="pi pi-times"
+      label="No"
+      (click)="cd.reject()"
+      severity="danger"
+    ></p-button>
+    <p-button
+      type="button"
+      icon="pi pi-check"
+      label="Yes"
+      (click)="cd.accept()"
+      severity="success"
+    ></p-button>
+  </p-footer>
+</p-confirmDialog>

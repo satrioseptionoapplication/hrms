@@ -1,0 +1,209 @@
+<breadcrumb></breadcrumb>
+
+<div class="row">
+  <div class="col-md-12">
+    <mat-card>
+      <mat-card-content>
+        <p-toast></p-toast>
+
+        <p-table
+          #dt
+          [value]="leaveEmployees"
+          [rows]="5"
+          [paginator]="true"
+          [(selection)]="selectedLeaveEmployeeEmployees"
+          [rowHover]="true"
+          [showCurrentPageReport]="true"
+          dataKey="Id"
+          currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+          styleClass="p-datatable-gridlines p-datatable-sm"
+        >
+          <ng-template pTemplate="caption">
+            <p-toolbar styleClass="mb-4 gap-2">
+              <ng-template pTemplate="left"> </ng-template>
+
+              <ng-template pTemplate="right">
+                <p-button
+                  label="Add New"
+                  icon="pi pi-plus"
+                  size="small"
+                  severity="success"
+                  (click)="openNew()"
+                ></p-button>
+              </ng-template>
+            </p-toolbar>
+          </ng-template>
+          <ng-template pTemplate="header">
+            <tr>
+              <th class="text-center">Action</th>
+              <th pSortableColumn="status" class="text-center">
+                Status <p-sortIcon field="status"></p-sortIcon>
+              </th>
+              <th pSortableColumn="employeeName">
+                Employee Name<p-sortIcon field="employeeName"></p-sortIcon>
+              </th>
+              <th style="min-width: 15rem">LeaveEmployee Detail</th>
+              <th pSortableColumn="status" style="min-width: 15rem">
+                Reason <p-sortIcon field="status"></p-sortIcon>
+              </th>
+              <th pSortableColumn="manager">Manager <p-sortIcon field="manager"></p-sortIcon></th>
+
+              <th class="text-center">Approval</th>
+
+              <th pSortableColumn="createdDate">
+                Created Date <p-sortIcon field="createdDate"></p-sortIcon>
+              </th>
+              <th pSortableColumn="createdBy">
+                Created By <p-sortIcon field="createdBy"></p-sortIcon>
+              </th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-leaveEmployee>
+            <tr>
+              <td class="text-center">
+                <div *ngIf="leaveEmployee.state === 'Pending'">
+                  <p-button
+                    tooltipPosition="top"
+                    pTooltip="Update"
+                    icon="pi pi-pencil"
+                    class="p-button-xs"
+                    severity="info"
+                    (click)="editLeaveEmployee(leaveEmployee)"
+                  ></p-button>
+                  <p-button
+                    pTooltip="Delete"
+                    icon="pi pi-trash"
+                    class="p-button-xs"
+                    severity="warning"
+                    (click)="deleteLeaveEmployee(leaveEmployee)"
+                  ></p-button>
+                </div>
+              </td>
+              <td class="text-center">
+                <p-tag
+                  [value]="leaveEmployee.state"
+                  [severity]="getStatusLeaveEmployee(leaveEmployee.state)"
+                ></p-tag>
+              </td>
+              <td>{{ leaveEmployee.employeeName }}</td>
+              <td>
+                <b>Start Date : </b> {{ leaveEmployee.startDate | date: 'dd MMMM yyyy' }} <br />
+                <b>End Date : </b> {{ leaveEmployee.endDate | date: 'dd MMMM yyyy' }} <br />
+                <b>Leave Type : </b> {{ leaveEmployee.leaveType }} <br />
+                <b>Duration : </b> {{ leaveEmployee.duration }} <br />
+                <b>Balance : </b> {{ leaveEmployee.balance }} <br />
+              </td>
+              <td>{{ leaveEmployee.reason }}</td>
+              <td>{{ leaveEmployee.manager }}</td>
+
+              <td class="text-center">
+                <i
+                  pTooltip="Detail Approval"
+                  class="pi pi-user"
+                  style="font-size: 2.5rem"
+                  style="color: black"
+                ></i>
+              </td>
+              <td>{{ leaveEmployee.createdDate | date: 'dd MMMM yyyy' }}</td>
+              <td>{{ leaveEmployee.createdBy }}</td>
+            </tr>
+          </ng-template>
+        </p-table>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>
+
+<p-dialog
+  [(visible)]="leaveEmployeeDialog"
+  [style]="{ width: '600px' }"
+  header="Leave Details"
+  [modal]="true"
+  styleClass="p-fluid"
+>
+  <ng-template pTemplate="content">
+    <form [formGroup]="form" class="p-formgroup-horizontal">
+      <div class="field" hidden>
+        <label for="leaveId">leavesId</label>
+        <input type="text" formControlName="leaveId" class="p-inputtext" />
+      </div>
+      <div class="field">
+        <label for="employeeName">Name</label>
+        <input
+          type="text"
+          readonly
+          formControlName="employeeName"
+          class="p-inputtext"
+          value="John Doe"
+          placeholder="John Doe"
+        />
+      </div>
+      <div class="field">
+        <label for="startDate">Start Date</label>
+        <p-calendar dateFormat="dd MM yy" formControlName="startDate"></p-calendar>
+      </div>
+      <div class="field">
+        <label for="endDate">End Date</label>
+        <p-calendar dateFormat="dd MM yy" formControlName="endDate"></p-calendar>
+      </div>
+      <div class="field">
+        <label for="leaveType">Leave Type</label>
+        <ng-select
+          [items]="masterLeave"
+          [multiple]="false"
+          [searchable]="false"
+          formControlName="leaveType"
+          value="this.form.leaveType"
+        ></ng-select>
+      </div>
+      <div class="field">
+        <label for="reason">Reason</label>
+        <textarea
+          id="reason"
+          type="text"
+          name="reason"
+          class="p-inputtext"
+          formControlName="reason"
+        ></textarea>
+      </div>
+      <div class="field">
+        <label for="manager">Manager</label>
+        <ng-select
+          [items]="masterManagers"
+          [multiple]="false"
+          [searchable]="false"
+          formControlName="manager"
+          value="this.form.manager"
+        ></ng-select>
+      </div>
+    </form>
+  </ng-template>
+  <ng-template pTemplate="footer">
+    <p-button label="Cancel" icon="pi pi-times" (click)="hideDialog()" severity="danger"></p-button>
+    <p-button
+      label="Save"
+      icon="pi pi-save"
+      (click)="saveLeaveEmployee()"
+      severity="success"
+    ></p-button>
+  </ng-template>
+</p-dialog>
+
+<p-confirmDialog #cd [style]="{ width: 'auto' }">
+  <p-footer>
+    <p-button
+      type="button"
+      icon="pi pi-times"
+      label="No"
+      (click)="cd.reject()"
+      severity="danger"
+    ></p-button>
+    <p-button
+      type="button"
+      icon="pi pi-check"
+      label="Yes"
+      (click)="cd.accept()"
+      severity="success"
+    ></p-button>
+  </p-footer>
+</p-confirmDialog>

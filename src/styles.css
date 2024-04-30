@@ -1,1 +1,16 @@
-/* You can add global styles to this file, and also import other style files */
+@import 'primeicons/primeicons.css';
+@import '~@ng-select/ng-select/themes/default.theme.css';
+
+.p-button-xs .p-button-icon-only {
+  font-size: 0.75rem;
+  padding: 0.3rem;
+  width: 2rem;
+  height: 2rem;
+  margin-right: 5px;
+}
+
+mat-card-header span {
+  display: flex !important;
+  justify-content: center;
+  align-items: center;
+}

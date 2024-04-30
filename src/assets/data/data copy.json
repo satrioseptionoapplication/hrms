@@ -1,0 +1,290 @@
+[
+  {
+    "managers": [
+      "Michael Smith",
+      "Emily Johnson",
+      "David Brown",
+      "Karen Wilson",
+      "Sarah Garcia",
+      "Daniel Clark",
+      "Emma Martinez",
+      "Robert Lee",
+      "John Doe",
+      "Olivia Walker"
+    ],
+    "leave": ["Vacation", "Sick Leave", "Personal Leave", "Maternity Leave"],
+    "positions": [
+      "Software Engineer",
+      "Marketing Specialist",
+      "HR Manager",
+      "Project Manager",
+      "Financial Analyst",
+      "System Administrator",
+      "Sales Representative",
+      "Financial Manager",
+      "Senior Software Engineer",
+      "Marketing Manager"
+    ],
+    "departments": [
+      "Engineering",
+      "Marketing",
+      "Human Resources",
+      "Project Management",
+      "Finance",
+      "Information Technology",
+      "Sales"
+    ],
+    "employee": [
+      {
+        "leaveId": 1,
+        "employeeName": "John Doe",
+        "birth": "1990-05-15",
+        "manager": "Michael Smith",
+        "startDate": "2024-04-10",
+        "endDate": "2024-04-15",
+        "leaveType": "Vacation",
+        "duration": "5 days",
+        "days": 5,
+        "status": "Approved",
+        "createdDate": "2024-04-05",
+        "createdBy": "Manager",
+        "reason": "Family vacation",
+        "balance": 15,
+        "position": "Software Engineer",
+        "department": "Engineering"
+      },
+      {
+        "leaveId": 2,
+        "employeeName": "Jane Smith",
+        "birth": "1992-08-20",
+        "manager": "Emily Johnson",
+        "startDate": "2024-05-03",
+        "endDate": "2024-05-04",
+        "leaveType": "Sick Leave",
+        "duration": "2 days",
+        "days": 2,
+        "status": "Pending",
+        "createdDate": "2024-04-20",
+        "createdBy": "Supervisor",
+        "reason": "Flu",
+        "balance": 8,
+        "position": "Marketing Specialist",
+        "department": "Marketing"
+      },
+      {
+        "leaveId": 3,
+        "employeeName": "Alice Johnson",
+        "birth": "1985-12-10",
+        "manager": "David Brown",
+        "startDate": "2024-06-10",
+        "endDate": "2024-06-12",
+        "leaveType": "Personal Leave",
+        "duration": "3 days",
+        "days": 3,
+        "status": "Approved",
+        "createdDate": "2024-05-25",
+        "createdBy": "HR",
+        "reason": "Attending a wedding",
+        "balance": 20,
+        "position": "HR Manager",
+        "department": "Human Resources"
+      },
+      {
+        "leaveId": 4,
+        "employeeName": "Robert Lee",
+        "birth": "1987-02-28",
+        "manager": "Karen Wilson",
+        "startDate": "2024-07-05",
+        "endDate": "2024-07-07",
+        "leaveType": "Vacation",
+        "duration": "3 days",
+        "days": 3,
+        "status": "Rejected",
+        "createdDate": "2024-06-25",
+        "createdBy": "Manager",
+        "reason": "No available coverage",
+        "balance": 10,
+        "position": "Project Manager",
+        "department": "Project Management"
+      },
+      {
+        "leaveId": 5,
+        "employeeName": "Emily Brown",
+        "birth": "1991-04-18",
+        "manager": "Sarah Garcia",
+        "startDate": "2024-08-20",
+        "endDate": "2024-08-23",
+        "leaveType": "Maternity Leave",
+        "duration": "4 days",
+        "days": 4,
+        "status": "Approved",
+        "createdDate": "2024-07-15",
+        "createdBy": "Supervisor",
+        "reason": "Expecting a baby",
+        "balance": 30,
+        "position": "Financial Analyst",
+        "department": "Finance"
+      },
+      {
+        "leaveId": 6,
+        "employeeName": "Michael Wilson",
+        "birth": "1988-09-25",
+        "manager": "Daniel Clark",
+        "startDate": "2024-09-12",
+        "endDate": "2024-09-13",
+        "leaveType": "Sick Leave",
+        "duration": "2 days",
+        "days": 2,
+        "status": "Approved",
+        "createdDate": "2024-08-30",
+        "createdBy": "HR",
+        "reason": "Cold",
+        "balance": 12,
+        "position": "System Administrator",
+        "department": "Information Technology"
+      },
+      {
+        "leaveId": 7,
+        "employeeName": "David Jones",
+        "birth": "1986-11-05",
+        "manager": "Emma Martinez",
+        "startDate": "2024-10-08",
+        "endDate": "2024-10-09",
+        "leaveType": "Personal Leave",
+        "duration": "2 days",
+        "days": 2,
+        "status": "Pending",
+        "createdDate": "2024-09-25",
+        "createdBy": "Manager",
+        "reason": "Family gathering",
+        "balance": 18,
+        "position": "Sales Representative",
+        "department": "Sales"
+      },
+      {
+        "leaveId": 8,
+        "employeeName": "Sarah Garcia",
+        "birth": "1984-07-12",
+        "manager": "Robert Lee",
+        "startDate": "2024-11-15",
+        "endDate": "2024-11-17",
+        "leaveType": "Vacation",
+        "duration": "3 days",
+        "days": 3,
+        "status": "Approved",
+        "createdDate": "2024-10-30",
+        "createdBy": "Supervisor",
+        "reason": "Holiday trip",
+        "balance": 25,
+        "position": "Financial Manager",
+        "department": "Finance"
+      },
+      {
+        "leaveId": 9,
+        "employeeName": "Christopher Martinez",
+        "birth": "1993-03-30",
+        "manager": "John Doe",
+        "startDate": "2024-12-20",
+        "endDate": "2024-12-22",
+        "leaveType": "Sick Leave",
+        "duration": "3 days",
+        "days": 3,
+        "status": "Rejected",
+        "createdDate": "2024-12-10",
+        "createdBy": "HR",
+        "reason": "Doctor's appointment",
+        "balance": 8,
+        "position": "Senior Software Engineer",
+        "department": "Engineering"
+      },
+      {
+        "leaveId": 10,
+        "employeeName": "Amanda Robinson",
+        "birth": "1990-10-28",
+        "manager": "Olivia Walker",
+        "startDate": "2025-01-05",
+        "endDate": "2025-01-07",
+        "leaveType": "Vacation",
+        "duration": "3 days",
+        "days": 3,
+        "status": "Approved",
+        "createdDate": "2024-12-20",
+        "createdBy": "Manager",
+        "reason": "Annual leave",
+        "balance": 18,
+        "position": "Marketing Manager",
+        "department": "Marketing"
+      }
+    ]
+  }
+]
+
+// random name data leave request with sample object 5 data with model leaveId: number;
+// leaveId: number;
+//   employeeName: string;
+//   birth: Date;
+//   manager: string;
+//   startDate: Date;
+//   endDate: Date;
+//   leaveType: string;
+//   duration: string;
+//   days: number;
+//   status: string;
+//   createdDate: Date;
+//   createdBy: string;
+//   reason: string | null;
+//   balance: number;
+//   position: string;
+//   department: string;
+// and random name object 5 data master manager, random  leave type, random  position, random
+//  department, random training type, random trainers,list training
+
+//  contoh 10 sampel data array string untuk master manager, leave type, position, department dan terpakai di list object
+//  list 5 sampel array string training type dengan interface
+//  trainingTypeId: number;
+//  trainingTypeName: string;
+//  isActive: string;
+//  createdDate: Date;
+//  createdBy: string;
+//  updatedDate: Date;
+//  updatedBy: string;
+//  list 10 sampel random data object leave request dengan interface
+//  employeeName: string;
+//   birth: Date;
+//   manager: string;
+//   startDate: Date;
+//   endDate: Date;
+//   leaveType: string;
+//   duration: string;
+//   days: number;
+//   status: string;
+//   createdDate: Date;
+//   createdBy: string;
+//   reason: string | null;
+//   balance: number;
+//   position: string;
+//   department: string;
+//   list 5 sampel random data object training list dengan interface
+//   trainingId: number;
+//   trainingName: string;
+//   trainers: string;
+//   employee: string[] | null;
+//   startDate: string;
+//   endDate: string;
+//   description: number;
+//   isActive: string;
+//   createdDate: Date;
+//   createdBy: string;
+//   updatedDate: Date;
+//   updatedBy: string;
+//   list 5 sampel random data object trainers dengan interface
+//   trainersId: number;
+//   trainersName: string;
+//   email: string;
+//   skill: string;
+//   isActive: string;
+//   createdDate: Date;
+//   createdBy: string;
+//   updatedDate: Date;
+
+//   updatedBy: string;

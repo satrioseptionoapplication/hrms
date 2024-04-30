@@ -1,0 +1,184 @@
+<breadcrumb></breadcrumb>
+
+<div class="row">
+  <div class="col-md-12">
+    <mat-card>
+      <mat-card-content>
+        <p-toast></p-toast>
+
+        <p-table
+          #dt
+          [value]="this.reimbusementss"
+          [rows]="5"
+          [paginator]="true"
+          [(selection)]="selectedReimbusements"
+          [rowHover]="true"
+          [showCurrentPageReport]="true"
+          [resizableColumns]="true"
+          [scrollable]="true"
+          dataKey="Id"
+          currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+          styleClass="p-datatable-gridlines p-datatable-sm"
+          columnResizeMode="expand"
+        >
+          <ng-template pTemplate="caption">
+            <p-toolbar styleClass="mb-4 gap-2">
+              <ng-template pTemplate="left">
+                <b>Last Update : {{ lastUpdated | date: 'dd MMMM yyyy HH:mm:ss' }}</b>
+              </ng-template>
+
+              <ng-template pTemplate="right">
+                <p-button
+                  label="Fetch Data"
+                  icon="pi pi-refresh"
+                  size="small"
+                  severity="secondary"
+                  (click)="refreshData()"
+                ></p-button>
+                &nbsp;
+                <p-button
+                  label="Add New"
+                  icon="pi pi-plus"
+                  size="small"
+                  severity="success"
+                  (click)="openNew()"
+                ></p-button>
+              </ng-template>
+            </p-toolbar>
+          </ng-template>
+          <ng-template pTemplate="header">
+            <tr>
+              <th pFrozenColumn alignFrozen="left" [frozen]="true"></th>
+              <th pSortableColumn="status">Status <p-sortIcon field="status"></p-sortIcon></th>
+              <th pSortableColumn="employee" class="text-center">
+                Employee<p-sortIcon field="employee"></p-sortIcon>
+              </th>
+              <th pSortableColumn="type">Type <p-sortIcon field="type"></p-sortIcon></th>
+              <th pSortableColumn="description">
+                Description <p-sortIcon field="description"></p-sortIcon>
+              </th>
+              <th pSortableColumn="amount">Amount <p-sortIcon field="amount"></p-sortIcon></th>
+              <th pSortableColumn="createdDate">
+                Created Date <p-sortIcon field="createdBy"></p-sortIcon>
+              </th>
+              <th pSortableColumn="createdBy">
+                Created By <p-sortIcon field="createdBy"></p-sortIcon>
+              </th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-reimbusements>
+            <tr>
+              <td pFrozenColumn class="text-center" alignFrozen="left" [frozen]="true">
+                <p-button
+                  tooltipPosition="top"
+                  pTooltip="Update"
+                  icon="pi pi-pencil"
+                  class="p-button-xs"
+                  severity="info"
+                  (click)="editReimbusements(reimbusements)"
+                ></p-button>
+                <p-button
+                  pTooltip="Delete"
+                  icon="pi pi-trash"
+                  class="p-button-xs"
+                  severity="warning"
+                  (click)="deleteReimbusements(reimbusements)"
+                ></p-button>
+              </td>
+              <td class="text-center">
+                <p-tag
+                  [value]="reimbusements.status"
+                  [severity]="getStatus(reimbusements.status)"
+                ></p-tag>
+              </td>
+              <td>{{ reimbusements.employee }}</td>
+              <td>{{ reimbusements.reimbusement }}</td>
+              <td>{{ reimbusements.description }}</td>
+              <td>{{ reimbusements.amount }}</td>
+              <td>{{ reimbusements.createdDate | date: 'dd MMMM yyyy' }}</td>
+              <td>{{ reimbusements.createdBy }}</td>
+            </tr>
+          </ng-template>
+        </p-table>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>
+
+<p-dialog
+  [(visible)]="reimbusementsDialog"
+  [style]="{ width: '600px' }"
+  header="Reimbusements List Details"
+  [modal]="true"
+  styleClass="p-fluid"
+>
+  <ng-template pTemplate="content">
+    <form [formGroup]="form" class="p-formgroup-horizontal">
+      <div class="field">
+        <label for="employee">Employee</label>
+        <ng-select
+          [items]="masterEmployee"
+          [multiple]="false"
+          [searchable]="true"
+          formControlName="employee"
+          value="this.form.employee"
+          bindLabel="employeeName"
+          bindId="employeeName"
+          [disabled]="isDisabled"
+        ></ng-select>
+      </div>
+      <div class="field">
+        <label for="reimbusement">Type</label>
+        <ng-select
+          [items]="reimbusementsType"
+          [multiple]="false"
+          [searchable]="true"
+          formControlName="reimbusement"
+          value="this.form.reimbusement"
+        ></ng-select>
+      </div>
+      <div class="field">
+        <label for="description">Description</label>
+        <textarea
+          id="description"
+          type="text"
+          name="description"
+          class="p-inputtext"
+          formControlName="description"
+        ></textarea>
+      </div>
+      <div class="field">
+        <label for="amount">Amount</label>
+        <input type="text" formControlName="amount" class="p-inputtext" />
+      </div>
+    </form>
+  </ng-template>
+  <ng-template pTemplate="footer">
+    <p-button label="Cancel" icon="pi pi-trash" (click)="hideDialog()" severity="danger"></p-button>
+    <p-button
+      label="Save"
+      icon="pi pi-save"
+      (click)="saveReimbusements()"
+      severity="success"
+    ></p-button>
+  </ng-template>
+</p-dialog>
+
+<p-confirmDialog #cd [style]="{ width: 'auto' }">
+  <p-footer>
+    <p-button
+      type="button"
+      icon="pi pi-times"
+      label="No"
+      (click)="cd.reject()"
+      severity="danger"
+    ></p-button>
+    <p-button
+      type="button"
+      icon="pi pi-check"
+      label="Yes"
+      (click)="cd.accept()"
+      severity="success"
+    ></p-button>
+  </p-footer>
+</p-confirmDialog>

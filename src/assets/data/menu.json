@@ -1,0 +1,113 @@
+{
+  "menu": [
+    {
+      "route": "dashboard",
+      "name": "Dashboard",
+      "type": "link",
+      "icon": "dashboard",
+      "badge": {
+        "color": "red-500",
+        "value": "5"
+      }
+    },
+    {
+      "route": "/",
+      "name": "HCM",
+      "type": "sub",
+      "icon": "list",
+      "children": [
+        {
+          "route": "hcm/employee",
+          "name": "Employee",
+          "icon": "list",
+          "type": "link"
+        },
+        {
+          "route": "hcm/leave",
+          "name": "Leave By Admin",
+          "type": "link"
+        },
+        {
+          "route": "hcm/leave-employee",
+          "name": "Leave By Employee",
+          "type": "link"
+        },
+        {
+          "route": "hcm/leave-approval",
+          "name": "Leave By Approval",
+          "type": "link"
+        }
+      ]
+    },
+    {
+      "route": "/",
+      "name": "Document",
+      "type": "sub",
+      "icon": "group_work",
+      "children": [
+        {
+          "route": "document/document-list",
+          "name": "Document By Requestor",
+          "type": "link"
+        },
+        {
+          "route": "document/document-approval",
+          "name": "Document By Approval",
+          "type": "link"
+        }
+      ]
+    },
+    {
+      "route": "/",
+      "name": "Training",
+      "type": "sub",
+      "icon": "event",
+      "children": [
+        {
+          "route": "training/training-type",
+          "name": "Training Type",
+          "type": "link"
+        },
+        {
+          "route": "training/trainers",
+          "name": "Trainers",
+          "type": "link"
+        },
+        {
+          "route": "training/training-list",
+          "name": "Training List",
+          "icon": "list",
+          "type": "link"
+        }
+      ]
+    },
+    {
+      "route": "project",
+      "name": "Project",
+      "type": "link",
+      "icon": "build",
+      "badge": {
+        "color": "red-500",
+        "value": "5"
+      }
+    },
+    {
+      "route": "/",
+      "name": "Finance",
+      "type": "sub",
+      "icon": "money",
+      "children": [
+        {
+          "route": "finance/overtime",
+          "name": "Overtime",
+          "type": "link"
+        },
+        {
+          "route": "finance/reimbusement",
+          "name": "Reimbusement",
+          "type": "link"
+        }
+      ]
+    }
+  ]
+}

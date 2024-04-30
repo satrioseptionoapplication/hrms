@@ -1,0 +1,149 @@
+<breadcrumb></breadcrumb>
+
+<div class="row">
+  <div class="col-md-12">
+    <mat-card>
+      <mat-card-content>
+        <p-toast></p-toast>
+
+        <p-table
+          #dt
+          [value]="trainingTypes"
+          [rows]="10"
+          [paginator]="true"
+          [(selection)]="selectedTrainingTypes"
+          [rowHover]="true"
+          [showCurrentPageReport]="true"
+          [resizableColumns]="true"
+          [scrollable]="true"
+          dataKey="Id"
+          currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+          styleClass="p-datatable-gridlines p-datatable-sm"
+          columnResizeMode="expand"
+        >
+          <ng-template pTemplate="caption">
+            <p-toolbar styleClass="mb-4 gap-2">
+              <ng-template pTemplate="left">
+                <b>Last Update : {{ lastUpdated | date: 'dd MMMM yyyy HH:mm:ss' }}</b>
+              </ng-template>
+
+              <ng-template pTemplate="right">
+                <p-button
+                  label="Fetch Data"
+                  icon="pi pi-refresh"
+                  size="small"
+                  severity="secondary"
+                  (click)="refreshData()"
+                ></p-button>
+                &nbsp;
+                <p-button
+                  label="Add New"
+                  icon="pi pi-plus"
+                  size="small"
+                  severity="success"
+                  (click)="openNew()"
+                ></p-button>
+              </ng-template>
+            </p-toolbar>
+          </ng-template>
+          <ng-template pTemplate="header">
+            <tr>
+              <th pFrozenColumn alignFrozen="left" [frozen]="true"></th>
+              <th pSortableColumn="trainingTypeName" class="text-center">
+                Training Type Name<p-sortIcon field="trainingTypeName"></p-sortIcon>
+              </th>
+              <th pSortableColumn="createdDate">
+                Created Date <p-sortIcon field="createdBy"></p-sortIcon>
+              </th>
+              <th pSortableColumn="createdBy">
+                Created By <p-sortIcon field="createdBy"></p-sortIcon>
+              </th>
+              <th pSortableColumn="isActive" class="text-center">
+                Active <p-sortIcon field="isActive"></p-sortIcon>
+              </th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-trainingTypes>
+            <tr>
+              <td pFrozenColumn class="text-center" alignFrozen="left" [frozen]="true">
+                <p-button
+                  tooltipPosition="top"
+                  pTooltip="Update"
+                  icon="pi pi-pencil"
+                  class="p-button-xs"
+                  severity="info"
+                  (click)="editTrainingTypes(trainingTypes)"
+                ></p-button>
+                <p-button
+                  pTooltip="Delete"
+                  icon="pi pi-trash"
+                  class="p-button-xs"
+                  severity="warning"
+                  (click)="deleteTrainingTypes(trainingTypes)"
+                ></p-button>
+              </td>
+              <td>{{ trainingTypes.trainingTypeName }}</td>
+              <td>{{ trainingTypes.createdDate | date: 'dd MMMM yyyy' }}</td>
+              <td>{{ trainingTypes.createdBy }}</td>
+              <td class="text-center">
+                <p-tag
+                  [value]="trainingTypes.isActive == true ? 'Active' : 'Deleted'"
+                  [severity]="isActive(trainingTypes.isActive)"
+                ></p-tag>
+              </td>
+            </tr>
+          </ng-template>
+        </p-table>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>
+
+<p-dialog
+  [(visible)]="trainingTypesDialog"
+  [style]="{ width: '600px' }"
+  header="Training Types Details"
+  [modal]="true"
+  styleClass="p-fluid"
+>
+  <ng-template pTemplate="content">
+    <form [formGroup]="form" class="p-formgroup-horizontal">
+      <div class="field" hidden>
+        <label for="trainingTypeId">Training Types ID</label>
+        <input type="text" formControlName="trainingTypeId" class="p-inputtext" />
+      </div>
+      <div class="field">
+        <label for="trainingTypeName">Training Types</label>
+        <input type="text" formControlName="trainingTypeName" class="p-inputtext" />
+      </div>
+    </form>
+  </ng-template>
+  <ng-template pTemplate="footer">
+    <p-button label="Cancel" icon="pi pi-times" (click)="hideDialog()" severity="danger"></p-button>
+    <p-button
+      label="Save"
+      icon="pi pi-save"
+      (click)="saveTrainingTypes()"
+      severity="success"
+    ></p-button>
+  </ng-template>
+</p-dialog>
+
+<p-confirmDialog #cd [style]="{ width: 'auto' }">
+  <p-footer>
+    <p-button
+      type="button"
+      icon="pi pi-times"
+      label="No"
+      (click)="cd.reject()"
+      severity="danger"
+    ></p-button>
+    <p-button
+      type="button"
+      icon="pi pi-check"
+      label="Yes"
+      (click)="cd.accept()"
+      severity="success"
+    ></p-button>
+  </p-footer>
+</p-confirmDialog>

@@ -1,0 +1,15 @@
+.p-formgroup-horizontal .p-field {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.p-formgroup-horizontal .p-field label {
+  flex: 0 0 30%;
+  margin-right: 1rem;
+  text-align: right;
+}
+
+.p-formgroup-horizontal .p-field .p-inputtext {
+  flex: 1;
+}

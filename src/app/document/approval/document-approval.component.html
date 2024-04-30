@@ -1,0 +1,182 @@
+<breadcrumb></breadcrumb>
+
+<div class="row">
+  <div class="col">
+    <mat-card class="text-white bg-teal-600">
+      <mat-card-header>
+        <span mat-card-avatar class="pi pi-check" style="font-size: 1.8rem"></span>
+        <mat-card-title
+          ><b>{{ this.totalapproved }}</b></mat-card-title
+        >
+        <mat-card-subtitle class="text-white">Approved</mat-card-subtitle>
+      </mat-card-header>
+    </mat-card>
+  </div>
+  <div class="col">
+    <mat-card class="text-white bg-lime-600">
+      <mat-card-header>
+        <span mat-card-avatar class="pi pi-clock" style="font-size: 1.8rem"></span>
+        <mat-card-title
+          ><b>{{ this.totalpending }}</b></mat-card-title
+        >
+        <mat-card-subtitle class="text-white">Pending</mat-card-subtitle>
+      </mat-card-header>
+    </mat-card>
+  </div>
+  <div class="col">
+    <mat-card class="text-white bg-red-600">
+      <mat-card-header>
+        <span mat-card-avatar class="pi pi-times" style="font-size: 1.8rem"></span>
+        <mat-card-title
+          ><b>{{ this.totalreject }}</b></mat-card-title
+        >
+        <mat-card-subtitle class="text-white">Reject</mat-card-subtitle>
+      </mat-card-header>
+    </mat-card>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-12">
+    <mat-card>
+      <mat-card-content>
+        <p-toast></p-toast>
+
+        <p-table
+          #dt
+          [value]="documentapprovals"
+          [rows]="5"
+          [paginator]="true"
+          [(selection)]="selectedDocumentApprovals"
+          [rowHover]="true"
+          [showCurrentPageReport]="true"
+          dataKey="Id"
+          currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+          styleClass="p-datatable-gridlines p-datatable-sm"
+        >
+          <ng-template pTemplate="header">
+            <tr>
+              <th></th>
+              <th pSortableColumn="status" class="text-center">
+                Status <p-sortIcon field="fileName"></p-sortIcon>
+              </th>
+              <th pSortableColumn="fileName" style="min-width: 15rem">
+                File Name <p-sortIcon field="fileName"></p-sortIcon>
+              </th>
+              <th>Description</th>
+              <th pSortableColumn="fileType">Type <p-sortIcon field="fileType"></p-sortIcon></th>
+              <th pSortableColumn="fileSize" style="min-width: 10rem">
+                Size <p-sortIcon field="fileSize"></p-sortIcon>
+              </th>
+              <th pSortableColumn="updatedDate">
+                Upload Date <p-sortIcon field="updatedDate"></p-sortIcon>
+              </th>
+              <th pSortableColumn="updatedBy">
+                Upload By <p-sortIcon field="updatedBy"></p-sortIcon>
+              </th>
+              <th pSortableColumn="isActive" class="text-center">
+                Active <p-sortIcon field="isActive"></p-sortIcon>
+              </th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-documentapproval>
+            <tr>
+              <td class="text-center">
+                <p-button
+                  icon="pi pi-check"
+                  class="p-button-xs"
+                  pTooltip="Approve"
+                  tooltipPosition="top"
+                  severity="success"
+                ></p-button>
+                <p-button
+                  icon="pi pi-times"
+                  class="p-button-xs"
+                  pTooltip="Reject"
+                  tooltipPosition="top"
+                  severity="danger"
+                ></p-button>
+                <p-button
+                  pTooltip="Download"
+                  icon="pi pi-download"
+                  class="p-button-xs"
+                  severity="secondary"
+                  (click)="downloadDocumentApproval(documentapproval)"
+                ></p-button>
+              </td>
+              <td class="text-center">
+                <p-tag
+                  [value]="documentapproval.status"
+                  [severity]="getStatus(documentapproval.status)"
+                ></p-tag>
+              </td>
+              <td>{{ documentapproval.fileName }}</td>
+              <td>{{ documentapproval.description }}</td>
+              <td>{{ documentapproval.fileType }}</td>
+              <td>{{ documentapproval.fileSize }} KB</td>
+              <td>{{ documentapproval.updatedDate | date: 'dd MMMM yyyy HH:mm:ss' }}</td>
+              <td>{{ documentapproval.updatedBy }}</td>
+              <td class="text-center">
+                <p-tag
+                  [value]="documentapproval.isActive == true ? 'Active' : 'Deleted'"
+                  [severity]="isActive(documentapproval.isActive)"
+                ></p-tag>
+              </td>
+            </tr>
+          </ng-template>
+        </p-table>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>
+
+<p-dialog
+  [(visible)]="documentapprovalDialog"
+  [style]="{ width: '600px' }"
+  header="DocumentApproval Details"
+  [modal]="true"
+  styleClass="p-fluid"
+>
+  <ng-template pTemplate="content">
+    <form>
+      <div class="p-field">
+        <label for="description">Description</label>
+        <textarea
+          id="description"
+          type="text"
+          name="description"
+          class="p-inputtext"
+          [(ngModel)]="description"
+        ></textarea>
+      </div>
+      <br />
+      <div class="p-field">
+        <label for="description">File Upload</label>
+        <p-fileUpload [showUploadButton]="false" (onSelect)="onFileUpload($event)"></p-fileUpload>
+      </div>
+    </form>
+  </ng-template>
+  <ng-template pTemplate="footer">
+    <button type="button" pButton label="Cancel" (click)="hideDialog()"></button>
+    <button type="button" pButton label="Save" (click)="saveDocumentApproval()"></button>
+  </ng-template>
+</p-dialog>
+
+<p-confirmDialog #cd [style]="{ width: 'auto' }">
+  <p-footer>
+    <p-button
+      type="button"
+      icon="pi pi-times"
+      label="No"
+      (click)="cd.reject()"
+      severity="danger"
+    ></p-button>
+    <p-button
+      type="button"
+      icon="pi pi-check"
+      label="Yes"
+      (click)="cd.accept()"
+      severity="success"
+    ></p-button>
+  </p-footer>
+</p-confirmDialog>

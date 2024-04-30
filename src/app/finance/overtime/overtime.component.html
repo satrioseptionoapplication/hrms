@@ -1,0 +1,182 @@
+<breadcrumb></breadcrumb>
+
+<div class="row">
+  <div class="col-md-12">
+    <mat-card>
+      <mat-card-content>
+        <p-toast></p-toast>
+
+        <p-table
+          #dt
+          [value]="overtimess"
+          [rows]="5"
+          [paginator]="true"
+          [(selection)]="selectedOvertimes"
+          [rowHover]="true"
+          [showCurrentPageReport]="true"
+          [resizableColumns]="true"
+          [scrollable]="true"
+          dataKey="Id"
+          currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+          styleClass="p-datatable-gridlines p-datatable-sm"
+          columnResizeMode="expand"
+        >
+          <ng-template pTemplate="caption">
+            <p-toolbar styleClass="mb-4 gap-2">
+              <ng-template pTemplate="left">
+                <b>Last Update : {{ lastUpdated | date: 'dd MMMM yyyy HH:mm:ss' }}</b>
+              </ng-template>
+
+              <ng-template pTemplate="right">
+                <p-button
+                  label="Fetch Data"
+                  icon="pi pi-refresh"
+                  size="small"
+                  severity="secondary"
+                  (click)="refreshData()"
+                ></p-button>
+                &nbsp;
+                <p-button
+                  label="Add New"
+                  icon="pi pi-plus"
+                  size="small"
+                  severity="success"
+                  (click)="openNew()"
+                ></p-button>
+              </ng-template>
+            </p-toolbar>
+          </ng-template>
+          <ng-template pTemplate="header">
+            <tr>
+              <th pFrozenColumn alignFrozen="left" [frozen]="true"></th>
+              <th pSortableColumn="status">Status <p-sortIcon field="status"></p-sortIcon></th>
+              <th pSortableColumn="employee" class="text-center">
+                Employee<p-sortIcon field="employee"></p-sortIcon>
+              </th>
+              <th pSortableColumn="type" style="min-width: 15rem">
+                Type <p-sortIcon field="type"></p-sortIcon>
+              </th>
+              <th pSortableColumn="startDate">
+                Start Date <p-sortIcon field="startDate"></p-sortIcon>
+              </th>
+              <th pSortableColumn="endDate">End Date <p-sortIcon field="endDate"></p-sortIcon></th>
+              <th pSortableColumn="amount">Amount <p-sortIcon field="amount"></p-sortIcon></th>
+              <th pSortableColumn="createdDate">
+                Created Date <p-sortIcon field="createdBy"></p-sortIcon>
+              </th>
+              <th pSortableColumn="createdBy">
+                Created By <p-sortIcon field="createdBy"></p-sortIcon>
+              </th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-overtimes>
+            <tr>
+              <td pFrozenColumn class="text-center" alignFrozen="left" [frozen]="true">
+                <p-button
+                  tooltipPosition="top"
+                  pTooltip="Update"
+                  icon="pi pi-pencil"
+                  class="p-button-xs"
+                  severity="info"
+                  (click)="editOvertimes(overtimes)"
+                ></p-button>
+                <p-button
+                  pTooltip="Delete"
+                  icon="pi pi-trash"
+                  class="p-button-xs"
+                  severity="warning"
+                  (click)="deleteOvertimes(overtimes)"
+                ></p-button>
+              </td>
+              <td class="text-center">
+                <p-tag [value]="overtimes.status" [severity]="getStatus(overtimes.status)"></p-tag>
+              </td>
+              <td>{{ overtimes.employee }}</td>
+              <td>{{ overtimes.type }}</td>
+              <td>{{ overtimes.startDate | date: 'dd MMMM yyyy' }}</td>
+              <td>{{ overtimes.endDate | date: 'dd MMMM yyyy' }}</td>
+              <td>{{ overtimes.amount }}</td>
+              <td>{{ overtimes.createdDate | date: 'dd MMMM yyyy' }}</td>
+              <td>{{ overtimes.createdBy }}</td>
+            </tr>
+          </ng-template>
+        </p-table>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>
+
+<p-dialog
+  [(visible)]="overtimesDialog"
+  [style]="{ width: '600px' }"
+  header="Overtimes List Details"
+  [modal]="true"
+  styleClass="p-fluid"
+>
+  <ng-template pTemplate="content">
+    <form [formGroup]="form" class="p-formgroup-horizontal">
+      <div class="field">
+        <label for="employee">Employee</label>
+        <ng-select
+          [items]="masterEmployee"
+          [multiple]="false"
+          [searchable]="true"
+          formControlName="employee"
+          bindLabel="employeeName"
+          bindId="employeeName"
+          value="this.form.employee"
+        ></ng-select>
+      </div>
+      <div class="field">
+        <label for="type">Type</label>
+        <ng-select
+          [items]="overtimesType"
+          [multiple]="false"
+          [searchable]="true"
+          formControlName="type"
+          value="this.form.type"
+        ></ng-select>
+      </div>
+      <div class="field">
+        <label for="startDate">Start Date</label>
+        <p-calendar dateFormat="dd MM yy" formControlName="startDate"></p-calendar>
+      </div>
+      <div class="field">
+        <label for="endDate">End Date</label>
+        <p-calendar dateFormat="dd MM yy" formControlName="endDate"></p-calendar>
+      </div>
+      <div class="field">
+        <label for="amount">Amount</label>
+        <input type="text" formControlName="amount" class="p-inputtext" />
+      </div>
+    </form>
+  </ng-template>
+  <ng-template pTemplate="footer">
+    <p-button label="Cancel" icon="pi pi-trash" (click)="hideDialog()" severity="danger"></p-button>
+    <p-button
+      label="Save"
+      icon="pi pi-save"
+      (click)="saveOvertimes()"
+      severity="success"
+    ></p-button>
+  </ng-template>
+</p-dialog>
+
+<p-confirmDialog #cd [style]="{ width: 'auto' }">
+  <p-footer>
+    <p-button
+      type="button"
+      icon="pi pi-times"
+      label="No"
+      (click)="cd.reject()"
+      severity="danger"
+    ></p-button>
+    <p-button
+      type="button"
+      icon="pi pi-check"
+      label="Yes"
+      (click)="cd.accept()"
+      severity="success"
+    ></p-button>
+  </p-footer>
+</p-confirmDialog>
